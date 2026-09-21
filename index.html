@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CineMatch | Book Your Movie Ticket</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: #1e2f3e;
+    }
+
+    /* custom scroll */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e0e7ed;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #c91e2c;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a01522;
+    }
+
+    /* header / navbar */
+    .navbar {
+      background: #0f1722;
+      backdrop-filter: blur(0px);
+      padding: 1rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid #e50914;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-icon {
+      background: #e50914;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 2px 8px rgba(229,9,20,0.4);
+    }
+    .logo-text h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: white;
+    }
+    .logo-text span {
+      font-size: 0.75rem;
+      color: #e2e8f0;
+      display: block;
+      letter-spacing: 0.3px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .nav-links a {
+      color: #f1f5f9;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+      font-size: 0.95rem;
+    }
+    .nav-links a:hover {
+      color: #e50914;
+    }
+    .btn-outline-light {
+      background: transparent;
+      border: 1.5px solid #e50914;
+      padding: 0.45rem 1.2rem;
+      border-radius: 40px;
+      color: white;
+      font-weight: 600;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .btn-outline-light:hover {
+      background: #e50914;
+      border-color: #e50914;
+      color: white;
+    }
+
+    /* main container */
+    .container {
+      max-width: 1280px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      flex: 1;
+    }
+
+    /* hero banner */
+    .hero {
+      background: linear-gradient(115deg, #101b2b 0%, #1b2a3f 100%);
+      border-radius: 32px;
+      padding: 2.2rem 2rem;
+      margin-bottom: 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.2);
+    }
+    .hero-text h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff, #e0e7ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero-text p {
+      margin-top: 10px;
+      opacity: 0.85;
+      max-width: 500px;
+    }
+    .hero-badge {
+      background: rgba(229,9,20,0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 60px;
+      backdrop-filter: blur(4px);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* movie grid */
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 1.5rem 0 1.2rem 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title span {
+      background: #e50914;
+      width: 6px;
+      height: 32px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .movie-card {
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 12px 28px -8px rgba(0,0,0,0.1);
+      transition: transform 0.25s ease, box-shadow 0.2s;
+      cursor: pointer;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .movie-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 22px 35px -12px rgba(0,0,0,0.2);
+    }
+    .movie-poster {
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      padding: 12px;
+    }
+    .rating {
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #ffcd3c;
+    }
+    .movie-info {
+      padding: 1.2rem 1rem 1.2rem;
+    }
+    .movie-title {
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+    }
+    .movie-detail {
+      font-size: 0.8rem;
+      color: #5b6e8c;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 12px;
+    }
+    .book-btn {
+      background: #e50914;
+      border: none;
+      width: 100%;
+      padding: 10px;
+      border-radius: 40px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+    .book-btn:hover {
+      background: #b80712;
+      transform: scale(0.97);
+    }
+
+    /* booking panel (modal style) */
+    .booking-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(5px);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .booking-panel {
+      background: #ffffff;
+      max-width: 500px;
+      width: 90%;
+      border-radius: 40px;
+      padding: 1.8rem;
+      box-shadow: 0 30px 45px rgba(0,0,0,0.3);
+      animation: fadeSlideUp 0.25s ease-out;
+    }
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .booking-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #edf2f7;
+      padding-bottom: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .booking-header h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #0b1e2e;
+    }
+    .close-modal {
+      font-size: 1.8rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-weight: 600;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 5px;
+      color: #1f3a4b;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 28px;
+      border: 1.5px solid #cfdfed;
+      font-size: 0.9rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: #e50914;
+      box-shadow: 0 0 0 3px rgba(229,9,20,0.2);
+    }
+    .seat-selection {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+    .seat {
+      background: #eef2f8;
+      width: 45px;
+      text-align: center;
+      padding: 8px 0;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.1s;
+      border: 1px solid #cbdde9;
+    }
+    .seat.selected {
+      background: #e50914;
+      color: white;
+      border-color: #e50914;
+    }
+    .seat.unavailable {
+      background: #bdc5d0;
+      cursor: not-allowed;
+      opacity: 0.5;
+      text-decoration: line-through;
+    }
+    .confirm-booking {
+      background: #0f1722;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 60px;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
+    .success-message {
+      background: #e6f7e6;
+      color: #0f5c2f;
+      padding: 12px;
+      border-radius: 32px;
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+
+    /* booking summary toaster */
+    .booking-toast {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #1f2d3d;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 60px;
+      font-weight: 500;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      z-index: 1100;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(8px);
+      background: rgba(15,23,34,0.95);
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+      background: #0f1722;
+      color: #a0b3cc;
+      font-size: 0.85rem;
+    }
+    @media (max-width: 640px) {
+      .navbar {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .hero-text h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="logo">
+    <div class="logo-icon">🎬</div>
+    <div class="logo-text">
+      <h1>CineMatch</h1>
+      <span>book · relax · enjoy</span>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#">Now Showing</a>
+    <a href="#">Coming Soon</a>
+    <button class="btn-outline-light" id="myBookingsBtn">📋 My Bookings</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-text">
+      <h2>Experience cinema like never before</h2>
+      <p>Reserve your seats, skip the queue, and enjoy blockbusters in premium comfort.</p>
+    </div>
+    <div class="hero-badge">
+      ⭐ 4.8 ★ from 2k+ reviews
+    </div>
+  </div>
+
+  <div class="section-title">
+    <span></span> <h2>🎟️ Now Showing</h2>
+  </div>
+  <div class="movies-grid" id="moviesGrid"></div>
+</div>
+
+<!-- booking modal overlay -->
+<div id="bookingModal" class="booking-overlay">
+  <div class="booking-panel">
+    <div class="booking-header">
+      <h3 id="modalMovieTitle">Movie Title</h3>
+      <button class="close-modal" id="closeModalBtn">&times;</button>
+    </div>
+    <div id="bookingFormArea">
+      <div class="form-group">
+        <label>Full name</label>
+        <input type="text" id="userName" placeholder="e.g., Rahul Sharma" required>
+      </div>
+      <div class="form-group">
+        <label>Showtime</label>
+        <select id="showtimeSelect">
+          <option value="10:30 AM">10:30 AM (Standard)</option>
+          <option value="2:00 PM">2:00 PM (Matinee)</option>
+          <option value="6:00 PM">6:00 PM (Evening)</option>
+          <option value="9:30 PM">9:30 PM (Late Night)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Select your seat(s) (max 4)</label>
+        <div id="seatContainer" class="seat-selection"></div>
+        <small style="color:#5a6e85;">Click on seat to select/deselect. Red = selected. Gray = booked already.</small>
+      </div>
+      <button id="confirmBookingBtn" class="confirm-booking">✅ Confirm Booking</button>
+      <div id="modalMessage"></div>
+    </div>
+  </div>
+</div>
+
+<!-- toast notification -->
+<div id="toastMsg" class="booking-toast">
+  <span>✔️</span> <span id="toastText">Booking confirmed!</span>
+</div>
+
+<footer>
+  <p>© 2025 CineMatch — premium movie booking platform. Made for NGINX deployment.</p>
+</footer>
+
+<script>
+  // ---------- MOVIE DATABASE ----------
+  const movies = [
+    { id: 1, title: "Dune: Part Two", genre: "Sci-Fi / Epic", duration: "2h 46m", rating: "⭐ 8.9", poster: "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dnbOE6iRDM0Myid.jpg" },
+    { id: 2, title: "Kung Fu Panda 4", genre: "Animation / Comedy", duration: "1h 34m", rating: "⭐ 7.8", poster: "https://image.tmdb.org/t/p/w500/kDp1vUBnMpe8ak4rjgl3cLELqjU.jpg" },
+    { id: 3, title: "Godzilla x Kong", genre: "Action / Monster", duration: "1h 55m", rating: "⭐ 7.2", poster: "https://image.tmdb.org/t/p/w500/z1p34R1qF7dWpG8bCb2cM9y8O8l.jpg" },
+    { id: 4, title: "The Fall Guy", genre: "Action / Comedy", duration: "2h 5m", rating: "⭐ 7.5", poster: "https://image.tmdb.org/t/p/w500/tSz1qsmS52Zn2HGhUtzXw2s4eIi.jpg" },
+    { id: 5, title: "Challengers", genre: "Drama / Romance", duration: "2h 11m", rating: "⭐ 7.9", poster: "https://image.tmdb.org/t/p/w500/H6j5smdpR5PJ1yCwLjej2n7I5b.jpg" },
+    { id: 6, title: "Inside Out 2", genre: "Animation / Family", duration: "1h 40m", rating: "⭐ 8.2", poster: "https://image.tmdb.org/t/p/w500/p2L0ko3tHjGZiT5Z9wH2gJdp7sW.jpg" }
+  ];
+
+  // backup poster fallback for missing images
+  const fallbackPoster = "https://via.placeholder.com/300x200?text=Movie+Poster";
+
+  // ---- Booking state: each movie has seatMap (15 seats) and bookings storage ----
+  // bookingData: array of objects { movieId, seatNumber, userName, showtime, bookingId, timestamp }
+  let allBookings = [];
+
+  // current selected movie & modal state
+  let currentMovie = null;
+  let selectedSeats = [];    // store seat numbers (like "A3", "B5")
+  let seatLockers = {};      // seatLockers[`${movieId}-${seatLabel}`] = true/false booked
+
+  // helper: refresh seat map for current movie based on actual bookings
+  function refreshSeatAvailability(movieId) {
+    // reset all locks for this movie
+    const seatPrefix = `${movieId}-`;
+    Object.keys(seatLockers).forEach(key => {
+      if (key.startsWith(seatPrefix)) delete seatLockers[key];
+    });
+    // lock seats that are booked from allBookings
+    allBookings.forEach(booking => {
+      if (booking.movieId === movieId) {
+        const lockKey = `${movieId}-${booking.seatNumber}`;
+        seatLockers[lockKey] = true;
+      }
+    });
+  }
+
+  // render seat grid dynamically (10 seats: A1-A5, B1-B5)
+  function renderSeatsForMovie(movieId) {
+    const seatContainer = document.getElementById('seatContainer');
+    if (!seatContainer) return;
+    const rows = ['A', 'B'];
+    const seatsPerRow = 5;
+    let html = '';
+    for (let row of rows) {
+      for (let i = 1; i <= seatsPerRow; i++) {
+        const seatLabel = `${row}${i}`;
+        const lockKey = `${movieId}-${seatLabel}`;
+        const isBooked = seatLockers[lockKey] === true;
+        const isSelected = selectedSeats.includes(seatLabel);
+        let seatClass = 'seat';
+        if (isBooked) seatClass += ' unavailable';
+        if (isSelected && !isBooked) seatClass += ' selected';
+        const disabledAttr = isBooked ? 'disabled' : '';
+        html += `<div class="${seatClass}" data-seat="${seatLabel}" ${disabledAttr}>${seatLabel}</div>`;
+      }
+    }
+    seatContainer.innerHTML = html;
+
+    // attach click listeners for available seats
+    document.querySelectorAll('.seat:not(.unavailable)').forEach(seatDiv => {
+      seatDiv.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const seatVal = seatDiv.getAttribute('data-seat');
+        if (!seatVal) return;
+        if (selectedSeats.includes(seatVal)) {
+          // deselect
+          selectedSeats = selectedSeats.filter(s => s !== seatVal);
+        } else {
+          if (selectedSeats.length >= 4) {
+            showToast("⚠️ You can book max 4 seats per transaction.");
+            return;
+          }
+          selectedSeats.push(seatVal);
+        }
+        // re-render seats
+        renderSeatsForMovie(currentMovie.id);
+      });
+    });
+  }
+
+  // show toast
+  function showToast(message, isError = false) {
+    const toast = document.getElementById('toastMsg');
+    const toastText = document.getElementById('toastText');
+    toastText.innerText = message;
+    toast.style.display = 'flex';
+    if (isError) toast.style.background = "#b91c1ccc";
+    else toast.style.background = "#0f1722cc";
+    setTimeout(() => {
+      toast.style.display = 'none';
+      if (isError) toast.style.background = "#0f1722cc";
+    }, 2800);
+  }
+
+  // render movies grid
+  function renderMovies() {
+    const grid = document.getElementById('moviesGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    movies.forEach(movie => {
+      const card = document.createElement('div');
+      card.className = 'movie-card';
+      // poster background with fallback
+      const posterUrl = movie.poster && movie.poster !== '' ? movie.poster : fallbackPoster;
+      card.innerHTML = `
+        <div class="movie-poster" style="background-image: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2)), url('${posterUrl}'); background-size: cover;">
+          <div class="rating">${movie.rating}</div>
+        </div>
+        <div class="movie-info">
+          <div class="movie-title">${movie.title}</div>
+          <div class="movie-detail">${movie.genre} • ${movie.duration}</div>
+          <button class="book-btn" data-id="${movie.id}">🎟️ Book Tickets</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    // attach booking event listeners
+    document.querySelectorAll('.book-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const movieId = parseInt(btn.getAttribute('data-id'));
+        const movie = movies.find(m => m.id === movieId);
+        if (movie) openBookingModal(movie);
+      });
+    });
+  }
+
+  function openBookingModal(movie) {
+    currentMovie = movie;
+    selectedSeats = [];
+    // load fresh seat availability
+    refreshSeatAvailability(movie.id);
+    // reset UI
+    document.getElementById('modalMovieTitle').innerText = movie.title;
+    document.getElementById('userName').value = '';
+    document.getElementById('showtimeSelect').selectedIndex = 0;
+    document.getElementById('modalMessage').innerHTML = '';
+    // render seats
+    renderSeatsForMovie(movie.id);
+    const modal = document.getElementById('bookingModal');
+    modal.style.display = 'flex';
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('bookingModal');
+    modal.style.display = 'none';
+    currentMovie = null;
+    selectedSeats = [];
+  }
+
+  // confirm booking action
+  function confirmBooking() {
+    if (!currentMovie) return;
+    const userNameInput = document.getElementById('userName').value.trim();
+    if (!userNameInput) {
+      showToast("Please enter your name.", true);
+      return;
+    }
+    if (selectedSeats.length === 0) {
+      showToast("Please select at least one seat.", true);
+      return;
+    }
+    const showtime = document.getElementById('showtimeSelect').value;
+
+    // double-check selected seats are still available (avoid race)
+    let alreadyBooked = false;
+    for (let seat of selectedSeats) {
+      const lockKey = `${currentMovie.id}-${seat}`;
+      if (seatLockers[lockKey] === true) {
+        alreadyBooked = true;
+        break;
+      }
+    }
+    if (alreadyBooked) {
+      showToast("Sorry, one of the selected seats was just booked. Please reselect.", true);
+      refreshSeatAvailability(currentMovie.id);
+      renderSeatsForMovie(currentMovie.id);
+      return;
+    }
+
+    // create booking records
+    const newBookings = [];
+    for (let seat of selectedSeats) {
+      const bookingId = Date.now() + '-' + Math.random().toString(36).substr(2, 6);
+      const newBooking = {
+        bookingId: bookingId,
+        movieId: currentMovie.id,
+        movieTitle: currentMovie.title,
+        seatNumber: seat,
+        userName: userNameInput,
+        showtime: showtime,
+        timestamp: new Date().toLocaleString()
+      };
+      newBookings.push(newBooking);
+      // lock seats immediately
+      seatLockers[`${currentMovie.id}-${seat}`] = true;
+    }
+    allBookings.push(...newBookings);
+
+    // confirmation message
+    const seatList = selectedSeats.join(', ');
+    document.getElementById('modalMessage').innerHTML = `<div class="success-message">✅ Booking successful! <br> <strong>${userNameInput}</strong>, ${selectedSeats.length} seat(s) (${seatList}) for "${currentMovie.title}" at ${showtime}.<br>🎟️ Booking ID: ${newBookings[0].bookingId.slice(-8)}</div>`;
+    
+    showToast(`🎉 Booked ${selectedSeats.length} seat(s) for ${currentMovie.title}!`);
+    
+    // reset selection after booking but keep modal open to show success
+    selectedSeats = [];
+    // re-render seat grid to reflect newly booked seats
+    renderSeatsForMovie(currentMovie.id);
+    
+    // auto close after 3 seconds? keep modal, but they can manually close
+    setTimeout(() => {
+      if(document.getElementById('modalMessage').innerHTML.includes('success')) {
+        // but do not auto close to avoid confusion, just fine.
+      }
+    }, 1000);
+  }
+
+  // view my bookings (simple summary)
+  function viewMyBookings() {
+    if (allBookings.length === 0) {
+      showToast("📭 No bookings yet. Book a movie first!");
+      return;
+    }
+    let summary = "🎬 Your Bookings:\n";
+    allBookings.forEach((b, idx) => {
+      summary += `${idx+1}. ${b.movieTitle} | Seat ${b.seatNumber} | ${b.showtime} | ${b.userName}\n`;
+    });
+    alert(summary);
+    showToast(`📋 ${allBookings.length} booking(s) found. Check details in alert.`);
+  }
+
+  // event listeners
+  document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
+  document.getElementById('confirmBookingBtn')?.addEventListener('click', confirmBooking);
+  document.getElementById('myBookingsBtn')?.addEventListener('click', viewMyBookings);
+  window.addEventListener('click', (e) => {
+    const modal = document.getElementById('bookingModal');
+    if (e.target === modal) closeModal();
+  });
+
+  // init movies
+  renderMovies();
+  // preload seatLockers from empty bookings initially
+  refreshSeatAvailability(0); // dummy
+  // fallback for broken poster images
+  window.addEventListener('load', () => {
+    // ensure any external image errors don't break style
+    console.log("CineMatch ready | NGINX static deployment");
+  });
+</script>
+</body>
+</html>
